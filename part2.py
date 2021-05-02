@@ -162,15 +162,15 @@ def do_file(file,folder, min_size, max_size):
     print("reading:", file)
     graph = read_input_file(folder+file, min_size=min_size, max_size=max_size)
     orig = graph.copy()
-    ans = find_longest_path_setup(graph, 5)
+    ans = find_longest_path_setup(graph, 4)
     write_output_file(orig, ans[1], ans[0], "./outputs/" + file.split(".")[0] + ".out")
     print("ANSWER:", ans)
 
 if __name__ == "__main__":
-    for file in os.listdir("./real_inputs/small"):
-        do_file(file, "./real_inputs/small/", 19, 30)
-    # for file in os.listdir("./real_inputs/medium"):
-    #     do_file(file, "./real_inputs/large/", 30, 50)
+    # for file in os.listdir("./real_inputs/small"):
+    #     do_file(file, "./real_inputs/small/", 19, 30)
+    for file in os.listdir("./real_inputs/medium"):
+        do_file(file, "./real_inputs/medium/", 30, 50)
     # for file in os.listdir("./real_inputs/large"):
     #     do_file(file, "./real_inputs/large/", 50, 100)
     #do_file("small-220.in","./real_inputs/small/",19,30)
