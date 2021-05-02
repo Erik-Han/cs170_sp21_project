@@ -68,7 +68,6 @@ def find_longest_path_setup(G, dpth):
     # nx.draw(G, with_labels = True)
     # plt.savefig("end.png")
     curr_length = nx.shortest_path_length(G, source=0, target=size - 1, weight="weight")
-
     score = curr_length - start_length
     print("depth:", orig_dpth,"score:",score)
     return ans_list, score
@@ -80,7 +79,7 @@ def find_longest_path(G, k, c, depth, selection, size):
         return
     end_time = time.time()
     global start_time
-    if end_time - start_time > 60:
+    if end_time - start_time > 1:
         abort = True
         return
 
@@ -150,13 +149,16 @@ def do_file(file,folder, min_size, max_size):
     write_output_file(orig, final_ans[1], final_ans[0], "./outputs/" + file.split(".")[0] + ".out")
     print("best score:",best_score,"best depth:",best_depth,"ANSWER:", final_ans )
 
+def do_folder(folder, min_size,max_size):
+    files = os.listdir(folder)
+    files = sorted(files,key = lambda file: int(file.split('.')[0].split('-')[1]))
+    for file in files:
+        do_file(file,folder,min_size,max_size)
+
 if __name__ == "__main__":
-    for file in sorted(os.listdir("./real_inputs/small")):
-        do_file(file, "./real_inputs/small/", 19, 30)
-    # for file in sorted(os.listdir("./real_inputs/medium")):
-    #     do_file(file, "./real_inputs/medium/", 30, 50)
-    # for file in sorted(os.listdir("./real_inputs/large")):
-    #     do_file(file, "./real_inputs/large/", 50, 100)
+    do_folder("./real_inputs/small/",19, 30)
+    do_folder("./real_inputs/medium/", 30, 50)
+    do_folder("./real_inputs/large/", 50, 100)
     #do_file("medium-6.in","./real_inputs/medium/",30,50)
 
 
