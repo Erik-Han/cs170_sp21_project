@@ -77,7 +77,6 @@ def set_cover_nodes(edges, c, size, G):
 def find_longest_path_setup(G, dpth):
     size = G.number_of_nodes()
     start_length = nx.shortest_path_length(G, source=0, target=size - 1, weight="weight")
-    s = str(start_length)+" "
     # nx.draw(G, with_labels = True)
     # plt.savefig("start.png")
     # plt.clf()
@@ -116,10 +115,9 @@ def find_longest_path_setup(G, dpth):
     # nx.draw(G, with_labels = True)
     # plt.savefig("end.png")
     curr_length = nx.shortest_path_length(G, source=0, target=size - 1, weight="weight")
-    s += str(curr_length)
 
     score = curr_length - start_length
-    print(s, dpth,"score:",score)
+    print("depth:", dpth,"score:",score)
     return ans_list, score
 
 
@@ -129,8 +127,7 @@ def find_longest_path(G, k, c, depth, selection, size):
         return
     end_time = time.time()
     global start_time
-    if end_time - start_time > 60:
-        global abort
+    if end_time - start_time > 3:
         abort = True
         return
 
@@ -180,10 +177,12 @@ def do_file(file,folder, min_size, max_size):
     orig = graph.copy()
     best_score = 0
     final_ans = None
-    for d in range(7):
+    best_depth = 0
+    for d in range(1,7):
+        graph = orig.copy()
+        global abort
         if abort:
             break
-        global abort
         abort = False
         global start_time
         start_time = time.time()
@@ -191,22 +190,20 @@ def do_file(file,folder, min_size, max_size):
         if score >= best_score:
             final_ans = ans
             best_score = score
-
-
-    if final_ans == None:
+            best_depth = d
+    if abort:
         print("too long")
-        return
-    write_output_file(orig, ans[1], ans[0], "./outputs/" + file.split(".")[0] + ".out")
-    print("ANSWER:", final_ans, best_score)
+    write_output_file(orig, final_ans[1], final_ans[0], "./outputs/" + file.split(".")[0] + ".out")
+    print("best score:",best_score,"best depth:",best_depth,"ANSWER:", final_ans )
 
 if __name__ == "__main__":
-    # for file in os.listdir("./real_inputs/small"):
+    # for file in sorted(os.listdir("./real_inputs/small")):
     #     do_file(file, "./real_inputs/small/", 19, 30)
-    for file in os.listdir("./real_inputs/medium"):
-        do_file(file, "./real_inputs/medium/", 30, 50)
-    # for file in os.listdir("./real_inputs/large"):
+    # for file in sorted(os.listdir("./real_inputs/medium")):
+    #     do_file(file, "./real_inputs/medium/", 30, 50)
+    # for file in sorted(os.listdir("./real_inputs/large")):
     #     do_file(file, "./real_inputs/large/", 50, 100)
-    #do_file("small-220.in","./real_inputs/small/",19,30)
+    do_file("medium-6.in","./real_inputs/medium/",30,50)
 
 
 

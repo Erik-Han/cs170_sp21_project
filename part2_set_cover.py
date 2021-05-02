@@ -29,6 +29,7 @@ def is_valid_node(G, node):
     for edge in tmp:
         G.add_edge(edge[0], edge[1], weight=edge[2])
     return ret
+
 def set_cover(paths, G, edge_freq):
     covered = {}
     total = len(paths)
@@ -80,7 +81,9 @@ def set_cover_nodes(edges, c, size, G):
                 to_remove.add(n)
         for n in to_remove:
             poss_nodes.remove(n)
-        node_freq = [[]] * size
+        node_freq = []
+        for i in range(size):
+            node_freq.append([])
         mx_node = None
         for i in range(len(edges)):
             e = edges[i]
@@ -218,6 +221,6 @@ if __name__ == "__main__":
     #     do_file(file, "./real_inputs/large/", 30, 50)
     # for file in os.listdir("./real_inputs/large"):
     #     do_file(file, "./real_inputs/large/", 50, 100)
-    do_file("small-220.in","./real_inputs/small/",19,30)
+    do_file("medium-6.in","./real_inputs/medium/",30,50)
 
 # 11:22:30
