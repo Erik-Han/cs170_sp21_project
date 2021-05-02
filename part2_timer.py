@@ -117,7 +117,9 @@ def find_longest_path_setup(G, dpth):
     # plt.savefig("end.png")
     curr_length = nx.shortest_path_length(G, source=0, target=size - 1, weight="weight")
     s += str(curr_length)
+
     score = curr_length - start_length
+    print(s, dpth,"score:",score)
     return ans_list, score
 
 
