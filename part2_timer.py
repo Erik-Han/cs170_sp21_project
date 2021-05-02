@@ -25,56 +25,9 @@ def is_valid_node(G, node):
     for edge in tmp:
         G.add_edge(edge[0], edge[1], weight=edge[2])
     return ret
-def set_cover_nodes(edges, c, size, G):
-    poss_nodes = set()
-    for e in edges:
-        if e[0] not in poss_nodes and e[0] != 0 and e[0] != size-1:
-            poss_nodes.add(e[0])
-        if e[1] not in poss_nodes and e[1] != 0 and e[1] != size-1:
-            poss_nodes.add(e[1])
-
-    covered = [False] * len(edges)
-    nodes = []
-    while c > 0 and len(edges) > 0:
-        to_remove = set()
-        for n in poss_nodes:
-            if not is_valid_node(G, n):
-                to_remove.add(n)
-        for n in to_remove:
-            poss_nodes.remove(n)
-        node_freq = [[]] * size
-        mx_node = None
-        for i in range(len(edges)):
-            e = edges[i]
-            if covered[i]:
-                continue
-            if mx_node:
-                bm = len(node_freq[mx_node])
-            if e[0] in poss_nodes:
-                node_freq[e[0]].append(i)
-                if not mx_node or len(node_freq[e[0]]) > bm:
-                    mx_node = e[0]
-            if mx_node:
-                bm = len(node_freq[mx_node])
-            if e[1] in poss_nodes:
-                node_freq[e[1]].append(i)
-                if not mx_node or len(node_freq[e[1]]) > bm:
-                    mx_node = e[1]
-        if mx_node:
-            G.remove_node(mx_node)
-            nodes.append(mx_node)
-        else:
-            break
-        c -= 1
-        for e in node_freq[mx_node]:
-            covered[e] = True
-    new_edges = []
-    for i in range(len(covered)):
-        if not covered[i]:
-            new_edges.append(edges[i])
-    return new_edges, nodes
 
 def find_longest_path_setup(G, dpth):
+    orig_dpth = dpth
     size = G.number_of_nodes()
     start_length = nx.shortest_path_length(G, source=0, target=size - 1, weight="weight")
     # nx.draw(G, with_labels = True)
@@ -117,7 +70,7 @@ def find_longest_path_setup(G, dpth):
     curr_length = nx.shortest_path_length(G, source=0, target=size - 1, weight="weight")
 
     score = curr_length - start_length
-    print("depth:", dpth,"score:",score)
+    print("depth:", orig_dpth,"score:",score)
     return ans_list, score
 
 
@@ -127,7 +80,7 @@ def find_longest_path(G, k, c, depth, selection, size):
         return
     end_time = time.time()
     global start_time
-    if end_time - start_time > 3:
+    if end_time - start_time > 60:
         abort = True
         return
 
@@ -178,7 +131,7 @@ def do_file(file,folder, min_size, max_size):
     best_score = 0
     final_ans = None
     best_depth = 0
-    for d in range(1,7):
+    for d in range(1,8):
         graph = orig.copy()
         global abort
         if abort:
@@ -187,23 +140,24 @@ def do_file(file,folder, min_size, max_size):
         global start_time
         start_time = time.time()
         ans, score = find_longest_path_setup(graph, d)
-        if score >= best_score:
+        if score >= best_score and ans:
             final_ans = ans
             best_score = score
             best_depth = d
     if abort:
         print("too long")
+        abort = False
     write_output_file(orig, final_ans[1], final_ans[0], "./outputs/" + file.split(".")[0] + ".out")
     print("best score:",best_score,"best depth:",best_depth,"ANSWER:", final_ans )
 
 if __name__ == "__main__":
-    # for file in sorted(os.listdir("./real_inputs/small")):
-    #     do_file(file, "./real_inputs/small/", 19, 30)
+    for file in sorted(os.listdir("./real_inputs/small")):
+        do_file(file, "./real_inputs/small/", 19, 30)
     # for file in sorted(os.listdir("./real_inputs/medium")):
     #     do_file(file, "./real_inputs/medium/", 30, 50)
     # for file in sorted(os.listdir("./real_inputs/large")):
     #     do_file(file, "./real_inputs/large/", 50, 100)
-    do_file("medium-6.in","./real_inputs/medium/",30,50)
+    #do_file("medium-6.in","./real_inputs/medium/",30,50)
 
 
 

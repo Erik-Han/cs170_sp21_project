@@ -183,6 +183,7 @@ def find_longest_path_setup(G):
             pure_paths = [path[0] for path in paths]
             curr_edges = set_cover(pure_paths, curr_G, edge_weights)
             if not curr_edges:
+                print("stuck")
                 stuck = True
                 break
             edges = curr_edges
