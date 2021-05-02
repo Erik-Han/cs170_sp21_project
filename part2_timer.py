@@ -195,7 +195,7 @@ def do_file(file,folder, min_size, max_size):
         print("too long")
         return
     write_output_file(orig, ans[1], ans[0], "./outputs/" + file.split(".")[0] + ".out")
-    print("ANSWER:", ans)
+    print("ANSWER:", final_ans, best_score)
 
 if __name__ == "__main__":
     # for file in os.listdir("./real_inputs/small"):
