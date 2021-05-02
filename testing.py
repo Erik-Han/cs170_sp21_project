@@ -13,3 +13,4 @@ if __name__ == "__main__":
     print(lst)
 
     print(lst2)
+    print(True or (x==y))
