@@ -22,6 +22,7 @@ def is_valid_edge(G, edge):
     return ret
 
 def is_valid_node(G, node):
+    print(node)
     tmp = list(G.edges(node, data="weight"))
     G.remove_node(node)
     ret = is_valid(G)
@@ -121,6 +122,8 @@ def find_longest_path_setup(G):
     # plt.savefig("start.png")
     # plt.clf()
     size = G.number_of_nodes()
+    start_length = nx.shortest_path_length(G, source=0, target=size - 1, weight="weight")
+
     k = 15
     c = 1
     if size <= 30:
@@ -157,7 +160,6 @@ def find_longest_path_setup(G):
         stuck = False
         while len(edges) < k:
             curr_G = G_base.copy()
-            print(edges,nodes)
             for edge in edges:
                 curr_G.remove_edge(edge[0], edge[1])
             if not is_valid(curr_G):
@@ -165,7 +167,6 @@ def find_longest_path_setup(G):
                 print("BROKEN GRAPH")
                 return None
             paths.add(tuple(nx.shortest_path(curr_G, source=0, target=size - 1, weight="weight")))
-            print(nx.shortest_path_length(curr_G, source=0, target=size - 1, weight="weight"))
 
             #get edge frequency
             for path in paths:
@@ -203,7 +204,8 @@ def find_longest_path_setup(G):
     for n in nodes:
         G.remove_node(n)
     curr_length = nx.shortest_path_length(G, source=0, target=size - 1, weight="weight")
-    print("final:", curr_length)
+    score = curr_length - start_length
+    print("score:", score)
     return [edges,nodes]
 
 def do_file(file, folder, min_size, max_size):
@@ -211,17 +213,20 @@ def do_file(file, folder, min_size, max_size):
     graph = read_input_file(folder + file, min_size=min_size, max_size=max_size)
     orig = graph.copy()
     ans = find_longest_path_setup(graph)
-    write_output_file(orig, ans[1], ans[0], "./outputs/" + file.split(".")[0] + ".out")
+    write_output_file(orig, ans[1], ans[0], "./outputs_set_cover/" + file.split(".")[0] + ".out")
     print("ANSWER:", ans)
 
+def do_folder(folder, min_size,max_size):
+    files = os.listdir(folder)
+    files = sorted(files,key = lambda file: int(file.split('.')[0].split('-')[1]))
+    for file in files:
+        do_file(file,folder,min_size,max_size)
 
 if __name__ == "__main__":
-    # for file in os.listdir("./real_inputs/small"):
-    #     do_file(file, "./real_inputs/small/", 19, 30)
-    # for file in os.listdir("./real_inputs/medium"):
-    #     do_file(file, "./real_inputs/large/", 30, 50)
-    # for file in os.listdir("./real_inputs/large"):
-    #     do_file(file, "./real_inputs/large/", 50, 100)
-    do_file("medium-6.in","./real_inputs/medium/",30,50)
+    #small is done
+    #do_folder("./real_inputs/small/",19, 30)
+    #do_folder("./real_inputs/medium/", 30, 50)
+    #do_folder("./real_inputs/large/", 50, 100)
+    do_file("large-161.in", "./real_inputs/large/",50,100)
 
 # 11:22:30

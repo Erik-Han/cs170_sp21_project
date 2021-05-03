@@ -79,10 +79,9 @@ def find_longest_path(G, k, c, depth, selection, size):
         return
     end_time = time.time()
     global start_time
-    if end_time - start_time > 1:
+    if end_time - start_time > 120:
         abort = True
         return
-
     try:
         poss_ans = nx.shortest_path_length(G, source=0, target=size-1, weight="weight")
     except NetworkXNoPath:
@@ -130,7 +129,7 @@ def do_file(file,folder, min_size, max_size):
     best_score = 0
     final_ans = None
     best_depth = 0
-    for d in range(1,8):
+    for d in range(4,5):
         graph = orig.copy()
         global abort
         if abort:
@@ -156,10 +155,10 @@ def do_folder(folder, min_size,max_size):
         do_file(file,folder,min_size,max_size)
 
 if __name__ == "__main__":
-    do_folder("./real_inputs/small/",19, 30)
-    do_folder("./real_inputs/medium/", 30, 50)
+    # do_folder("./real_inputs/small/",19, 30)
+    #do_folder("./real_inputs/medium/", 30, 50)
     do_folder("./real_inputs/large/", 50, 100)
-    #do_file("medium-6.in","./real_inputs/medium/",30,50)
+    #do_file("medium-109.in", "./real_inputs/medium/",30,50)
 
 
 
